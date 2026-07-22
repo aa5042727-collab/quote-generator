@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Quote Generator</title>
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2f3542;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 40px 35px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  }
+
+  h1 {
+    font-size: 20px;
+    color: #2f3542;
+    margin: 0 0 25px;
+  }
+
+  #quote-text {
+    font-size: 19px;
+    line-height: 1.5;
+    color: #333;
+    min-height: 80px;
+    margin: 0 0 15px;
+  }
+
+  #quote-author {
+    font-size: 15px;
+    color: #666;
+    font-style: italic;
+    margin: 0 0 25px;
+  }
+
+  button {
+    background: #4834d4;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #372aa8;
+  }
+
+  button:disabled {
+    background: #a0a0a0;
+    cursor: not-allowed;
+  }
+
+  #error-msg {
+    color: #c0392b;
+    font-size: 13px;
+    margin-top: 12px;
+    min-height: 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Random Quote Generator</h1>
+  <p id="quote-text">Loading a quote...</p>
+  <p id="quote-author"></p>
+  <button id="new-quote-btn">New Quote</button>
+  <p id="error-msg"></p>
+</div>
+
+<script>
+  const API_URL = "https://dummyjson.com/quotes/random";
+
+  const quoteText = document.getElementById("quote-text");
+  const quoteAuthor = document.getElementById("quote-author");
+  const errorMsg = document.getElementById("error-msg");
+  const button = document.getElementById("new-quote-btn");
+
+  async function getQuote() {
+    button.disabled = true;
+    errorMsg.textContent = "";
+
+    try {
+      const response = await fetch(API_URL);
+      const data = await response.json();
+
+      quoteText.textContent = data.quote;
+      quoteAuthor.textContent = "- " + data.author;
+    } catch (error) {
+      errorMsg.textContent = "Could not load a quote. Please try again.";
+    }
+
+    button.disabled = false;
+  }
+
+  button.addEventListener("click", getQuote);
+
+  // Load the first quote when the page opens
+  getQuote();
+</script>
+
+</body>
+</html>
